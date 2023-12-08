@@ -126,45 +126,47 @@ depending on context.
 
 There are four lenses:
 
-1. Nullability (:n, :N)
-2. Variability (:f, :v)
-3. Mutabilty (:i, :m, :l)
-4. Memory Management Scheme (:d, :j, :p, :r, :s, :u, :w, :W)
+1. Nullability (`:n`, `:N`)
+2. Variability (`:f`, `:v`)
+3. Mutabilty (`:i`, `:m`, `:l`)
+4. Memory Management Scheme (`:d`, `:j`, `:p`, `:r`, `:s`, `:u`, `:w`, `:W`)
 
 ### Nullability
 
 Nullability determines whether a pointer is allowed to be null or not.
 The possible lenses are:
 
-- :N - non-null; the value is guaranteed to never be null
-- :n - nullable; the value may or may not be null
+- `:N` - non-null; the value is guaranteed to never be null
+- `:n` - nullable; the value may or may not be null
 
 Primitive values can never be null. Arrays can never be null, only empty.
 
 Pointer parameters are non-null by default. For fields in a struct, the
 rules are:
 
-- Reference-counted objects (:r) are non-null by default
+- Reference-counted objects (`:r`) are non-null by default
+- Jailed objects (`:j`) are non-null by default
+- Stack-allocated object (`:s`) are always non-null
 - Primitive values and arrays are always non-null
-- Unique pointers (:u) and weak references (:w, :W) are nullable by default
+- Unique pointers (`:u`) and weak references (`:w`, `:W`) are nullable by default
 
 ### Variability
 
 Variability determines whether an lvalue can change. The two values are:
 
-- :f - fixed; the lvalue will not change
-- :v - variable; the lvalue is allowed to change
+- `:f` - fixed; the lvalue will not change
+- `:v` - variable; the lvalue is allowed to change
 
-Almost everything is :v by default. The one exception is the `this`
-parameter of a method, which is always :f.
+Almost everything is `:v` by default. The one exception is the `this`
+parameter of a method, which is always `:f`.
 
 ### Mutability
 
 Mutability determines whether an rvalue can change. The three values are;
 
-- :i - immutable; the value will never change
-- :m - mutable; the value is allowed to change
-- :l - locked; the value will not be changed by the function parameter or
+- `:i` - immutable; the value will never change
+- `:m` - mutable; the value is allowed to change
+- `:l` - locked; the value will not be changed by the function parameter or
   field declaring the value, but might be changed by some other function
   or some other aggregate containing the value
 
@@ -172,33 +174,33 @@ Mutability determines whether an rvalue can change. The three values are;
 
 The scheme determines how memory is managed. The values are:
 
-- :d - data; the value is declared in the .DATA or .BSS section of the
+- `:d` - data; the value is declared in the .DATA or .BSS section of the
   object file, and will therefore never be freed
-- :e - embedded; the object is nested, and copied on assignment
-- :j - jailed; the pointer will not escape the stack
-- :p - primitive; the value is copied on assignment
-- :r - reference counted; the value is a pointer with a reference count
+- `:e` - embedded; the object is nested, and copied on assignment
+- `:j` - jailed; the pointer will not escape the stack
+- `:p` - primitive; the value is copied on assignment
+- `:r` - reference counted; the value is a pointer with a reference count
   that is automatically managed on assignment. When the reference count
   reaches zero, the object is freed
-- :s - stack; the object is allocated on the stack
-- :u - unique; the object is a unique pointer. When set to null, the 
+- `:s` - stack; the object is allocated on the stack
+- `:u` - unique; the object is a unique pointer. When set to null, the 
   object is freed
-- :w - weak; a bidirectional weak reference
-- :W - weak; a unidirectional weak reference, only available in limited
+- `:w` - weak; a bidirectional weak reference
+- `:W` - weak; a unidirectional weak reference, only available in limited
   scenarios
 
-The difference between :j and :s is that a :j pointer *might* be allocated
-on the stack, and a :s pointer is *definitely* allocated on the stack.
+The difference between `:j` and `:s` is that a `:j` pointer *might* be allocated
+on the stack, and a `:s` pointer is *definitely* allocated on the stack.
 
 The default scheme depends on the type:
 
-- Primitive types always use :p
-- Structures that contain :j fields must use :s
-- Structures that contain no reference cycles default to :r
-- Structures that do contain reference cycles default to :w
-- Arrays of primitives use :r
-- Arrays of :r also use :r
-- Tins of :w use :e
+- Primitive types always use `:p`
+- Structures that contain `:j` fields must use `:s`
+- Structures that contain no reference cycles default to `:r`
+- Structures that do contain reference cycles default to `:w`
+- Arrays of primitives use `:r`
+- Arrays of `:r` also use `:r`
+- Tins of `:w` use `:e`
 
 ## Functions
 
@@ -243,14 +245,14 @@ a single colon:
 Methods are similar to functions, but begin with a dot:
 
     animal/ {
-      .sound() string, ""
+      .sound(:) string, ""
     }
 
 You override a method with a slash:
 
-   cat/animal {
-     /sound, "meow"
-   }
+    cat/animal {
+      /sound, "meow"
+    }
 
 Note that you can omit the parameters and return type for an overriden
 method if you don't need to change them. (Parameters are contravariant,
@@ -260,7 +262,7 @@ Finally, you declare an abstract method with a backslash. A better
 version of the above `animal` class would be:
 
     animal/ {
-      \sound() string
+      \sound(:) string
     }
 
 ## Statements
