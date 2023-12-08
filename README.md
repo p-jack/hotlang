@@ -22,12 +22,17 @@ features will include:
   it can emit a C header file without issue.
 
 Before you get excited, please note that this project isn't even
-alpha quality yet. It's an experimental playground. I'm currently
-working on various forms of garbage collection; after that I need
-to add support for enums, strings, and libraries; after *that* I 
-need to refactor the solver; and after *that* I can finally get it 
-to self-compile. So, a few years.
+alpha quality yet. It's an experimental playground. The code is
+messy (you'll note that many source files are entirely commented
+out), there are TODOs everywhere, and in general this is not
+ready for prime-time. I only added it to GitHub to convince you,
+dear reader, of my intentions.
+
+I'm currently working on various forms of garbage collection; after 
+that I need to add support for enums, strings, and libraries; after
+*that* I need to refactor the solver; and after *that* I can finally
+get it to self-compile. So, a few years.
 
 Having said that: It already *is* a fully functional, Turing-complete
 programming language. The compiler takes in hot source code and
-emits LLVM.
+emits LLVM, which llc can compile to emit a static binary.
