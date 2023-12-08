@@ -18,6 +18,9 @@ features will include:
   For instance, you can plausibly integrate another language's
   syntax, such as SQL, directly into hot, and therefore check
   query syntax at compile-time instead of test-time.
+- Compile-time garbage collection. Hotlang uses the solver to
+  expand Rust's compile-time garbage collection of unique pointers
+  to arbitrary directed graphs of pointers
 - Trivial C integration. Hotlang does no name mangling, so
   it can emit a C header file without issue.
 
