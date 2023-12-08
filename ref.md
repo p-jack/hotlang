@@ -213,32 +213,32 @@ its return type (if any), followed by its block:
 
 For one-line functions, you can use a comma instead of a block:
 
-   sum(x int, y int), x + y
+    sum(x int, y int), x + y
 
 ### this
 
 If you define a function inside a struct, you can add a 'this' parameter:
 
-   point {
+    point {
    
-     x float64
-     y float64
+      x float64
+      y float64
    
-     add(this point, that point) point, {x + that.x, y + that.y}
+      add(this point, that point) point, {x + that.x, y + that.y}
    
-   }
+    }
 
 You will want to do that a lot, so you can shorthand it by just specifying
 a single colon:
 
-   point {
-   
-     x float64
-     y float64
-   
-     add(:, that point) point, {x + that.x, y + that.y}
-   
-   }
+    point {
+    
+      x float64
+      y float64
+    
+      add(:, that point) point, {x + that.x, y + that.y}
+    
+    }
    
 ## Methods
 
@@ -358,7 +358,7 @@ Again, you can specify lenses with a colon:
       //
     }
 
-Hot also supports tail if statements after single statements::
+Hot also supports tail if statements after a single statement:
 
     return null if input is null
 
