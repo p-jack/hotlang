@@ -263,3 +263,108 @@ version of the above `animal` class would be:
       \sound() string
     }
 
+## Statements
+
+In hot, statement are terminated by a newline. You can break long lines
+up by inserting a newline somewhere where a statement wouldn't ordinarily
+terminate, such as after an operator in an infix expression.
+
+### Blocks
+
+A block consists of multiple statements surrounded by braces.
+
+Ordinarily,a new block creates a new scope, so locals declared in the 
+block won't be visible outside the block. If you prepend a | to the
+opening brace, however, you declare an *inline* block. An inline 
+block shares the scope of its parent block. That's sometimes useful
+for macro expansions.
+
+### Locals
+
+You declare local variables with a `let` statement. One `let`
+statement can declare multiple locals, separated by commas.
+
+Each declaration consists of a name, a type, and an initial value.
+All three are optional, but at least one must be present. If only a
+name is given, then the type will be determined by the first 
+assignment to the local. If only a type is given, then the name is
+derived from the type. If only an initial value is given, then the
+type is derived from the initial value, and the name is derived from
+the type.
+
+These are all equivalent:
+
+    let string string = ""
+    
+    let string
+    string = ""
+    
+    let string:
+    string = ""
+
+    let = ""
+
+### Function Calls
+
+A function call is the name of the function followed by its parameters.
+If the call doesn't take parameters, you can omit the parentheses:
+
+    let x = foo()
+    let x = foo
+
+### Allocations
+
+You can allocate a struct or a class by using the name followed by braces.
+If the name is obvious, you can omit it:
+
+    point {
+      x, y float64 = 0.0
+    }
+
+    triangle {
+      a, b, c point
+    }
+
+    foo() triangle, {{}, {1.0, 1.0}, {0.0, 1.1}}
+
+You can follow the closing brace with a : to specify lenses. This allocates
+a point on the stack:
+
+    let = point{}:s
+
+### Array Literals
+
+    let a = [1, 2, 3]
+    let a [uint16] = [1, 2, 3]
+
+Again, you can specify lenses with a colon:
+
+    let a = [1, 2, 3]:s
+
+### Tin Literals
+
+    let h = #hash["one", "two", "three"]
+    let h = #hash["one", "two", "three"]:s
+
+### If
+
+    if a {
+      // 
+    } else if b {
+      //
+    } else {
+      //
+    }
+
+Hot also supports tail if statements after single statements::
+
+    return null if input is null
+
+### While
+
+    while condition {
+      //
+    }
+
+## Expressions
+
