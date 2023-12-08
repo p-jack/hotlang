@@ -1,0 +1,31 @@
+
+setField(obj:p, new:gn) object {
+  // Abort early if nothing has changed.
+  return if obj->field is new
+
+  // clear inbound from old value
+  let old = obj->field
+  if old not null {
+    old->parent = null
+    old+>destroy() if !old+>reachable
+  }
+
+  // set the field's new value
+  obj->field = new
+  return if new is null
+
+  //
+  new->anchored = true if new.locals == 0
+
+  // Remember new's current parent for later.
+  let oldParent = new->parent
+
+  // Set new's parent
+  new->parent = obj
+
+  // TODO, && !oldParent.exotic
+  if oldParent not null {
+    oldParent->field = null
+    new.destroy if !new.reachable
+  }
+}

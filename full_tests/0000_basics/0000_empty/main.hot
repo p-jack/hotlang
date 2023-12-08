@@ -1,0 +1,9 @@
+wtf error 7
+
+room/ {
+  id int
+}
+
+main {
+  let room = room{111}
+}

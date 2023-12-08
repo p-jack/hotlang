@@ -1,0 +1,3 @@
+#!/bin/bash
+
+bin/AMD64/Debug/net6.0/src $@
