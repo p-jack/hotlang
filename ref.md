@@ -8,7 +8,6 @@ The boolean type is just `bool`.
 
 ### Integers
 
-0123456789012345678901234567890123456789012345678901234567890123456789
 The system signed integer is `int`, as per tradition. The system unsigned 
 integer is `uint.`
 
