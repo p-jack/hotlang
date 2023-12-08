@@ -306,15 +306,79 @@ These are all equivalent:
 
     let = ""
 
-### Function Calls
+### If
 
-A function call is the name of the function followed by its parameters.
-If the call doesn't take parameters, you can omit the parentheses:
+This is fairly standard:
 
-    let x = foo()
-    let x = foo
+    if a {
+      //
+    }
 
-### Allocations
+    if a {
+      //
+    } else {
+      //
+    }
+
+    if a {
+      // 
+    } else if b {
+      //
+    } else {
+      //
+    }
+
+Hot also supports tail if statements after a single statement:
+
+    return null if input is null
+
+### While
+
+Again, standard:
+
+    while condition {
+      //
+    }
+
+### Return
+
+The keyword `return` followed by a value. For void functions, the value is
+omitted.
+
+### Throw
+
+The keyword `throw` followed by the name of the error constant.
+
+## Expressions
+
+### Infix Operators
+
+All of these are standard:
+
+- Arithmetic: `+`, `-`, `*`, `/`, `%`
+- Bitwise: `&`, `|`, `^`, `<<`, `>>`, `>>>`
+- Logical: `&&`, `||`, `^^`
+- Value comparison: `==`, `!=`, `<`, `>`, `>=`, `<=`
+- Reference comparison: `is`, `not`
+
+Those last ones only operate on pointer types.
+
+### Prefix Operators
+
+Again, standards:
+
+- Logical not: `!`
+- Bitwise negation: `~`
+- Arithmetic negation: `-`
+
+### Count
+
+You can get the number of elements in an array or a tin by following
+it with a `#`:
+
+    let size = a#
+
+### Struct Literals
 
 You can allocate a struct or a class by using the name followed by braces.
 If the name is obvious, you can omit it:
@@ -348,25 +412,42 @@ Again, you can specify lenses with a colon:
     let h = #hash["one", "two", "three"]
     let h = #hash["one", "two", "three"]:s
 
-### If
+### Function Calls
 
-    if a {
-      // 
-    } else if b {
-      //
-    } else {
-      //
-    }
+A function call is the name of the function followed by its parameters.
+If the call doesn't take parameters, you can omit the parentheses:
 
-Hot also supports tail if statements after a single statement:
+    let x = foo()
+    let x = foo
 
-    return null if input is null
+You can also use the magic dot to invoke a static function. Assuming
+you have this function:
 
-### While
+    abs(x int) uint, x < 0 ? -x : x
 
-    while condition {
-      //
-    }
+Then these two statements are equivalent:
 
-## Expressions
+    let x = abs(y)
+    let x = y.abs
+    
+### Fields
+
+You can get the value of a struct or class's field with `->`:
+
+    let v = o->f
+
+You can also use the magic dot to get a field:
+
+    let v = o.f
+
+### Methods
+
+You can invoke a method with `+>`:
+
+    let v = o->method(p)
+
+You can also use the magic dot to do it:
+
+    let v = o.method(p)
+
 
