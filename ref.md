@@ -450,4 +450,48 @@ You can also use the magic dot to do it:
 
     let v = o.method(p)
 
+## Loops
 
+You declare a loop with the contextual keyword loop. The loop is
+like a function, in that it can take parameters, but its block must
+consist of a while loop, and that while loop must begin with a give
+expression. Here's a loop that produces the Fibonacci sequence:
+
+    fibonacci loop(n int) {
+      let i = 0, a = 1, b = -1
+      while i < n {
+        ---> a + b
+        i++
+        let t = a
+        a = b
+        b = t + b
+      }
+    }
+
+Note that loops are *loops*. They are not *objects*, like iterators in
+other languages. Loops can act as a source for the chain API.
+
+## Chains
+
+A chain begins with a source, followed by one or more links, and finally
+a sink.
+
+The source can be an array or a tin, in which case the chain will iterate
+over the elements. The source can also be a loop, in which case the chain
+will iterate over the values produced by the loop.
+
+The links are operations that are common in functional programming languages,
+such as `map` and `filter`. The links in a chain are always expressed via the
+magic dot.
+
+Here's a chain that prints the first ten Fibonacci numbers:
+
+    fibonacci(10).each:print
+
+Here's a chain that only prints the even ones:
+
+    fibonacci(10).filter:even.each:print
+
+And here's a chain that sums them:
+
+    fibonacci(10).sum
