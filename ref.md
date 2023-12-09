@@ -242,7 +242,9 @@ a single colon:
    
 ## Methods
 
-Methods are similar to functions, but begin with a dot:
+Methods are similar to functions, but begin with a dot. Methods always need
+a `this` parameter. Unlike other languages, you have to specify it manually,
+but again you can use the shorthand:
 
     animal/ {
       .sound(:) string, ""
