@@ -473,7 +473,7 @@ other languages. Loops can act as a source for the chain API.
 
 ## Chains
 
-A chain begins with a source, followed by one or more links, and finally
+A chain begins with a source, followed by zero or more links, and finally
 a sink.
 
 The source can be an array or a tin, in which case the chain will iterate
@@ -495,3 +495,96 @@ Here's a chain that only prints the even ones:
 And here's a chain that sums them:
 
     fibonacci(10).sum
+
+## Access Modifiers
+
+Toplevel elements can begin with an optional access modifier. If no access 
+modifier is specified, the element is only visible within the file that declared
+it. (Most languages call that `private`.)
+
+The other access modifiers are:
+
+- `-` - the toplevel element is visible to all files in the same folder as the
+  declaring file;
+- `+` - the toplevel element is visible to all files in the same project as the
+  declaring file;
+- `*` - the toplevel element is exported, included in the symbol table of the object
+  file.
+
+## Project Structure
+
+The hot compiler compiles *projects*, not individual files. A hot project consists
+of any `.hot` files in any directory under a directory that defines a `hot.conf`
+file. The `hot.conf` file specifies the name of the project, external dependencies,
+and so on.
+
+## Names
+
+### Namespaces
+
+There are two main namespaces, one for types and one for named things, which at the
+toplevel includes functions and constants (including enum constants.) That means you
+can give a function or constant the same name as a type, without causing a conflict.
+
+Within a function, each block defines a scope that is part of the namespace for 
+named things. That means you can give a local variable the same name as a type without
+a conflict.
+
+If a function is defined inside a struct and includes a `this` parameter, then the
+struct's fields become part of the function's scope. So you can just specify `field`
+instead of specifying `this->field`.
+
+A class has a third namespace, its methods. Those also become part of the method's
+scope. So instead of specifying `this+>method()`, you can specify `method()`.
+
+### Full Names
+
+Most toplevel elements have both a *declared name* and a *full name*. The declared
+name is typically short and sweet, like the `point` example structure used througout
+this documentation. Fields do not have a full name, nor do methods.
+
+The full name of a toplevel element is created by forming a list of tokens as follows.
+The first token is the project's name. Then, the folder names for each folder between
+the toplevel's source file and the root folder. Then, the name of the source file that
+declared the toplevel. Then, the toplevel's names for each ancestor toplevel of the 
+declared toplevel. And finally, the toplevel's declared name.
+
+Once that list of tokens is composed, any adjacent duplicates are merged into just one
+token. Then the list of tokens is joined by underscores.
+
+That sounds more complicated than it is. Here's an example. Let's say the project contains
+one source file, under the following folders:
+
+    root/hot.conf
+    root/model
+    root/model/node
+    root/model/node/node.hot
+
+Assume the name of the project (defined in hot.conf) is "myproj." And let's say the source
+file contains the following declarations:
+
+    node/ {
+      status enum {
+        success, failure
+      }
+    }
+
+The list of tokens for the `node` class is:
+
+    myproj model node node
+
+Eliminating the duplicate, the full name of `node` becomes `myproj_model_node`.
+
+The list of tokens for the `status` enum is:
+
+    myproj model node node status
+
+Again, the duplicate is eliminated, so the full name of `status` becomes 
+`myproj_model_node_status`.
+
+### Name Resolution
+
+The hot compiler uses a static form of multiple dispatch to resolve names. When
+the compiler encounters a name, it resolves to the nearest visible match for that
+name and any parameters that come with it.
+
