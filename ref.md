@@ -564,9 +564,7 @@ Assume the name of the project (defined in hot.conf) is "myproj." And let's say 
 file contains the following declarations:
 
     node/ {
-      status enum {
-        success, failure
-      }
+      init()
     }
 
 The list of tokens for the `node` class is:
@@ -575,16 +573,82 @@ The list of tokens for the `node` class is:
 
 Eliminating the duplicate, the full name of `node` becomes `myproj_model_node`.
 
-The list of tokens for the `status` enum is:
+The list of tokens for the `init` function is:
 
-    myproj model node node status
+    myproj model node node init
 
-Again, the duplicate is eliminated, so the full name of `status` becomes 
-`myproj_model_node_status`.
+Again, the duplicate is eliminated, so the full name of `init` becomes 
+`myproj_model_node_init`.
 
-### Name Resolution
+You can construct a class or struct using any token suffix of its full name. 
+So these are all equivalent:
+
+    let n = node{}
+    let n = model_node{}
+    let n = myproj_model_node{}
+
+So, too, you can call the `init` function using any token suffix of its full name.
+So these are all equivalent:
+
+    init()
+    node_init()
+    model_node_init()
+    myproj_model_node_init()
+
+In general you'll prefer the shorter names, but you can always fall back to a
+full name in the case of name conflicts. However, the hot compiler makes name
+conflicts exceedingly rare.
+
+### Function/Variable Name Resolution
 
 The hot compiler uses a static form of multiple dispatch to resolve names. When
 the compiler encounters a name, it resolves to the nearest visible match for that
 name and any parameters that come with it.
 
+"Nearest" means that names are considered in a particular order. For function
+calls, that order is:
+
+1. Locals are considered first, if the name has no parameters. (Remember that you
+   can omit parentheses when calling a function with no arguments.)
+2. Fields are considered next, if the current function/method has a `this`
+   parameter, and if the name has no parameters.
+3. Methods are considered next, if the current method has a `this` parameter.
+4. Functions and constants in the current file are then considered.
+5. Functions and constants in the current folder are then considered.
+6. Functions and constants in the current project are then considered.
+7. Functions and constants in imported libraries are then considered.
+
+"Visible" means that the function's access modifier must allow access from the
+current file. So if a function would ordinarily match, but it's private and not
+in the current file, the function will not be considered.
+
+"Match" means that the function's formal parameters must match the actual parameters
+passed to the function. If the actual return type is known, then the function's
+formal return type must match that as well.
+
+Because the parameters have to match, multiple libraries can use the same short 
+function names and there will likely be no conflict. Because nearby things are 
+considered first, you can add new functions to libraries or to a big project 
+without worrying about breaking API compatibility with existing code.
+
+That means that there's no need for `import` or `include` directives. When compiling
+a project, the hot compiler always imports the entire standard library, plus any 
+libraries specified in the project's configuration file. 
+
+### Type Name Resolution
+
+When resolving a type name, the rules are very similar. The type name might
+have parameters (if we are constructing a struct or a class) or might not (if
+we are specifying a type for a parameter or a local.)
+
+The order is:
+
+1. Types in the current file are first considered.
+2. Types in the current folder are then considered.
+3. Types in the current project are then considered.
+4. Types in imported libraries are then considered.
+
+Again, a type has to be visible (per its access modifier) to be considered.
+
+When constructing, the fields specified in the expression must match the fields
+in the struct or class.
