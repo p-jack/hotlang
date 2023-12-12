@@ -571,15 +571,15 @@ file contains the following declarations:
 
 The list of tokens for the `node` class is:
 
-    myproj model node node
+    myproj model node node node
 
-Eliminating the duplicate, the full name of `node` becomes `myproj_model_node`.
+Eliminating the duplicates, the full name of `node` becomes `myproj_model_node`.
 
 The list of tokens for the `init` function is:
 
-    myproj model node node init
+    myproj model node node node init
 
-Again, the duplicate is eliminated, so the full name of `init` becomes 
+Again, the duplicates are eliminated, so the full name of `init` becomes 
 `myproj_model_node_init`.
 
 You can construct a class or struct using any token suffix of its full name. 
